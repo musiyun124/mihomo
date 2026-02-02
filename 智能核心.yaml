@@ -29,7 +29,7 @@ secret: ""
 
 # 订阅健康检查
 p: &p
-  type: http
+  输入: http
   interval: 21600
   health-check:
     enable: true
@@ -44,7 +44,7 @@ p: &p
 
 #·智能组管理
 s: &s
-  type: smart
+  输入: smart
   uselightgbm: true
   collectdata: false
   prefer-asn: true
@@ -90,7 +90,7 @@ sniffer:
 # 网卡模块
 tun:
   exclude-uid: []
-  include-uid: [10064,10095,10111,10335,10397,10501,10505,10506,10508,10511,10512,10554,10563,10572,10577,10587,10589,10595,10600,10603,10609,10614,10621,10629,10636,10637,10639,10665]
+  include-uid: []
   enable: true  # true 开 # false 默认关
   device: ikun
   stack: gvisor
@@ -146,7 +146,7 @@ proxies:
 
 # 应用分流配置
 app_groups: &app_groups
-    type: select
+    输入: select
     proxies:
       - 总模式
       - 🇨🇳 本地直连
@@ -163,7 +163,7 @@ app_groups: &app_groups
 proxy-groups:
   - name: 总模式
     icon: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/icon2/Main.png"
-    type: select
+    输入: select
     proxies:
       - 延迟最低
       - 香港·智能
@@ -175,7 +175,7 @@ proxy-groups:
 
   - name: 订阅更新
     icon: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/icon2/Update.png"
-    type: select
+    输入: select
     proxies:
       - 🇨🇳 本地直连
       - 总模式
@@ -247,7 +247,7 @@ proxy-groups:
 
   - name: 国内直连名单
     icon: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/icon2/GNZL.png"
-    type: select
+    输入: select
     proxies:
       - 🇨🇳 本地直连
       - 总模式
@@ -258,7 +258,7 @@ proxy-groups:
 
   - name: 广告拦截
     icon: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/icon2/GGLJ.png"
-    type: select
+    输入: select
     proxies:
       - PASS
       - ⛔ 拒绝连接
@@ -267,7 +267,7 @@ proxy-groups:
 
   - name: WebRTC
     icon: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/icon2/WebRTC.png"
-    type: select
+    输入: select
     proxies:
       - PASS
       - ⛔ 拒绝连接
@@ -280,7 +280,7 @@ proxy-groups:
 
   - name: 延迟最低
     icon: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/icon2/YCZD.png"
-    type: url-test
+    输入: url-test
     include-all-providers: true
 
   # -------- 地区节点分组 --------
@@ -316,12 +316,12 @@ proxy-groups:
   
   - name: 手动选择
     icon: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/icon2/Select.png"
-    type: select
+    输入: select
     include-all-providers: true
 
 # ============ 规则集锚点定义 ============
 rule-anchor:
-  Local: &Local
+  本地: &Local
     {type: file, behavior: classical, format: text}
   YAML: &YAML
     {type: http, behavior: classical, format: yaml, interval: 86400}
