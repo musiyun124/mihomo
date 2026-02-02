@@ -29,7 +29,7 @@ secret: ""
 
 # 订阅健康检查
 p: &p
-  type: http
+  输入: http
   interval: 21600
   health-check:
     enable: true
@@ -44,7 +44,7 @@ p: &p
 
 #·智能组管理
 s: &s
-  type: smart
+  输入: smart
   uselightgbm: true
   collectdata: false
   prefer-asn: true
