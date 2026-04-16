@@ -276,8 +276,8 @@ function operator(pro) {
       }
       // ikey(倍率) 从此处移除，改为编号后追加
       keyover = keyover
-        .concat(firstName, usflag, nNames, findKeyValue, retainKey, ikeys)
-        .filter((k) => k !== "");
+        。concat(firstName, usflag, nNames, findKeyValue, retainKey, ikeys)
+        。filter((k) => k !== "");
       e.name = keyover.join(FGF);
       e._ikey = ikey; // 暂存倍率，等 jxh 编号后再追加
     } else {
