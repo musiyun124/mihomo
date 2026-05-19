@@ -23,31 +23,31 @@ log-level: silent
 bind-address: "*"
 find-process-mode: always
 external-controller: 0.0.0.0:9090
-external-ui-url: "https://v6.gh-proxy.org/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages-no-fonts.zip"
+external-ui-url: "https://v6.gh-proxy.org/https://github.com/musiyun124/zashboard/archive/refs/heads/gh-pages-no-fonts.zip"
 external-ui: "dashboard"
 secret: ""
 
 # 订阅健康检查
 p: &p
-  输入: http
+  type: http
   interval: 21600
   health-check:
     enable: true
-    url: 'https://cp.cloudflare.com/generate_204'
+    url: 'https://connectivitycheck.gstatic.com/generate_204'
     interval: 1800
     timeout: 5000
   proxy: 订阅更新
-  exclude-filter: '(?i)官网|邀请|到期|流量|更新|验证|剩余|频道|长期|推广|分享|周期|我的'
+#  exclude-filter: '(?i)官网|邀请|到期|流量|更新|验证|剩余|频道|长期|推广|分享|周期|我的'
   header:
       User-Agent:
-      - "FlClash/0.8.91"
+      - "ClashMetaForAndroid/v2.11.23"
 
 #·智能组管理
 s: &s
-  输入: smart
+  type: smart
   uselightgbm: true
-  collectdata: false
   prefer-asn: true
+  hidden: true
 
 proxy-providers:
   proxy1:
@@ -100,8 +100,8 @@ sniffer:
 tun:
   exclude-uid: []
   include-uid: []
-  enable: true  # true 开 # false 默认关
-  device: Meta
+  enable: false  # true 开 # false 默认关
+  device: ikun
   stack: gvisor
   dns-hijack:
     - any:53
@@ -131,8 +131,6 @@ dns:
   default-nameserver:
     - https://223.5.5.5/dns-query
     - https://1.12.12.12/dns-query
-    - https://8.8.8.8/dns-query
-    - https://1.0.0.1/dns-query
   direct-nameserver:
     - https://dns.alidns.com/dns-query
     - https://doh.pub/dns-query
@@ -146,26 +144,23 @@ dns:
   nameserver:
     - https://cloudflare-dns.com/dns-query
     - https://dns.google/dns-query
-
 # 特殊代理节点定义
 proxies:
   - {name: 🇨🇳 本地直连, type: direct, udp: true}
   - {name: ⛔ 拒绝连接, type: reject}
-  - {name: 🌐 DNS_Hijack, type: dns}
 
 # 应用分流配置
 app_groups: &app_groups
     type: select
     proxies:
       - 总模式
-      - 🇨🇳 本地直连
-      - 延迟最低
       - 香港·智能
       - 台湾·智能
       - 狮城·智能
       - 日本·智能
       - 美国·智能
       - 手动选择
+      - 🇨🇳 本地直连
       - ⛔ 拒绝连接
 
 # 代理组配置
@@ -174,13 +169,12 @@ proxy-groups:
     icon: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/icon2/Main.png"
     type: select
     proxies:
-      - 延迟最低
-      - 香港·智能
-      - 台湾·智能
-      - 狮城·智能
-      - 日本·智能
-      - 美国·智能
       - 手动选择
+      - 美国·智能
+      - 香港·智能
+      - 狮城·智能
+      - 台湾·智能
+      - 日本·智能
 
   - name: 订阅更新
     icon: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/icon2/Update.png"
@@ -271,7 +265,6 @@ proxy-groups:
     proxies:
       - PASS
       - ⛔ 拒绝连接
-      - 🌐 DNS_Hijack
       - REJECT-DROP
 
   - name: WebRTC
@@ -280,17 +273,11 @@ proxy-groups:
     proxies:
       - PASS
       - ⛔ 拒绝连接
-      - 🌐 DNS_Hijack
       - REJECT-DROP
 
   - name: 漏网之鱼
     icon: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/icon2/LWZY.png"
     <<: *app_groups
-
-  - name: 延迟最低
-    icon: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/icon2/YCZD.png"
-    type: url-test
-    include-all-providers: true
 
   # -------- 地区节点分组 --------
   - name: 狮城·智能
@@ -322,7 +309,7 @@ proxy-groups:
     filter: "^(?=.*(台|新北|彰化|TW|Taiwan)).*$"
     include-all-providers: true
     <<: *s
-  
+
   - name: 手动选择
     icon: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/icon2/Select.png"
     type: select
@@ -332,10 +319,6 @@ proxy-groups:
 rule-anchor:
   Local: &Local
     {type: file, behavior: classical, format: text}
-  YAML: &YAML
-    {type: http, behavior: classical, format: yaml, interval: 86400}
-  Classical: &Classical
-    {type: http, behavior: classical, format: text, interval: 86400}
   IPCIDR: &IPCIDR
     {type: http, behavior: ipcidr, format: mrs, interval: 86400}
   Domain: &Domain
@@ -352,9 +335,9 @@ rule-providers:
     path: ./rules/代理名单.list # 需手动创建文件并添加规则
 
   WebRTC_端/域:
-    <<: *Classical
-    path: ./rules/WebRTC.list
-    url: "https://v6.gh-proxy.org/https://github.com/GitMetaio/Surfing/raw/refs/heads/rm/Home/rules/WebRTC.list"
+    <<: *Domain
+    path: ./rules/WebRTC.mrs
+    url: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/rules/WebRTC.mrs"
 
   Fake-IP-Filter:
     <<: *Domain
@@ -452,12 +435,12 @@ rule-providers:
   Instagram_域:
     <<: *Domain
     path: ./rules/Instagram.mrs
-    url: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo-rules/raw/refs/heads/rules/Instagram.mrs"
+    url: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/rules/Instagram.mrs"
 
   Emby_域:
-    <<: *YAML
-    path: ./rules/Emby.yaml
-    url: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/rules/Emby.yaml"
+    <<: *Domain
+    path: ./rules/Emby.mrs
+    url: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/rules/Emby.mrs"
 
   Discord_域:
     <<: *Domain
@@ -490,9 +473,6 @@ rule-providers:
 # ============ 路由规则 ============
 # 规则优先级：从上到下依次匹配，命中即停止
 rules:
-  # -------- DNS 相关规则 --------
-  - DST-PORT,53,🌐 DNS_Hijack
-
   # -------- 自定义规则优先 --------
   - RULE-SET,直连名单,国内直连名单
   - RULE-SET,代理名单,海外代理名单
