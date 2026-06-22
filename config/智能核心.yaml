@@ -40,7 +40,7 @@ p: &p
 #  exclude-filter: '(?i)官网|邀请|到期|流量|更新|验证|剩余|频道|长期|推广|分享|周期|我的'
   header:
       User-Agent:
-      - "ClashMetaForAndroid/v2.11.23"
+      - "ClashMetaForAndroid/v2.11.29"
 
 #·智能组管理
 s: &s
@@ -73,7 +73,7 @@ profile:
 ntp:
   enable: true
   write-to-system: true
-  server: ntp.ntsc.ac.cn
+  server: ntp.aliyun.com
   port: 123
   interval: 60
 
@@ -118,7 +118,6 @@ dns:
   enable: true
   ipv6: false
   cache-algorithm: arc
-  prefer-h3: true
   listen: 0.0.0.0:1053
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
@@ -127,7 +126,8 @@ dns:
   fake-ip-filter:
     - RULE-SET,CN_域,real-ip
     - RULE-SET,Fake-IP-Filter,real-ip
-    - DOMAIN-KEYWORD,mtalk.google,real-ip
+    - RULE-SET,FCM_域,real-ip
+    - MATCH,fake-ip
   default-nameserver:
     - https://223.5.5.5/dns-query
     - https://1.12.12.12/dns-query
@@ -138,12 +138,12 @@ dns:
     - https://dns.alidns.com/dns-query
     - https://doh.pub/dns-query
   nameserver-policy:
-    "RULE-SET:CN_域":
+    "RULE-SET:CN_域,FCM_域":
       - https://dns.alidns.com/dns-query
       - https://doh.pub/dns-query
   nameserver:
-    - https://cloudflare-dns.com/dns-query
-    - https://dns.google/dns-query
+    - https://cloudflare-dns.com/dns-query#DNS连接
+    - https://dns.google/dns-query#DNS连接
 # 特殊代理节点定义
 proxies:
   - {name: 🇨🇳 本地直连, type: direct, udp: true}
@@ -275,6 +275,10 @@ proxy-groups:
       - ⛔ 拒绝连接
       - REJECT-DROP
 
+  - name: DNS连接
+    icon: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/icon2/DNS.png"
+    <<: *app_groups
+
   - name: 漏网之鱼
     icon: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/icon2/LWZY.png"
     <<: *app_groups
@@ -353,6 +357,11 @@ rule-providers:
     path: ./rules/CN_域.mrs
     url: "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/raw/refs/heads/mihomo-ruleset/cn.mrs"
 
+  FCM_域:
+    <<: *Domain
+    path: ./rules/FCM_域.mrs
+    url: "https://v6.gh-proxy.org/https://github.com/musiyun124/mihomo/raw/refs/heads/main/rules/FCM.mrs"
+  
   No-ads-all_域:
     <<: *Domain
     path: ./rules/No-ads-all.mrs
@@ -491,7 +500,6 @@ rules:
   - RULE-SET,CN_域,🇨🇳 本地直连
   - RULE-SET,CN_IP,🇨🇳 本地直连
   - DOMAIN-KEYWORD,v6.gh-proxy,🇨🇳 本地直连
-  - AND,((NETWORK,udp),(DST-PORT,443)),⛔ 拒绝连接
 
   # -------- 应用分流规则 --------
   - RULE-SET,GitHub_域,GitHub
@@ -501,6 +509,8 @@ rules:
   - RULE-SET,Discord_域,Discord
   - RULE-SET,TikTok_域,TikTok
 
+  - RULE-SET,Instagram_域,Instagram
+
   - RULE-SET,Twitter_域,Twitter(X)
   - RULE-SET,Twitter_IP,Twitter(X),no-resolve
 
@@ -508,15 +518,13 @@ rules:
   - RULE-SET,AI_域,AI
   - RULE-SET,AI_IP,AI,no-resolve
 
-  - DOMAIN-KEYWORD,mtalk.google,GoogleFCM
+  - RULE-SET,FCM_域,GoogleFCM
 
   - RULE-SET,YouTube_域,YouTube
   - RULE-SET,YouTube_IP,YouTube,no-resolve
 
   - RULE-SET,Google_域,Google
   - RULE-SET,Google_IP,Google,no-resolve
-
-  - RULE-SET,Instagram_域,Instagram
 
   - RULE-SET,Spotify_域,Spotify
   - RULE-SET,Spotify_IP,Spotify,no-resolve
